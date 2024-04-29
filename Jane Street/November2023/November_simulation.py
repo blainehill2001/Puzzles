@@ -1,6 +1,7 @@
-import numpy as np
 import os
 from itertools import permutations
+
+import numpy as np
 
 
 def get_possible_moves():
@@ -43,7 +44,7 @@ def print_lattice_in_quandrant_one(lattice, knight_pos, good_moves):
 
     print("\n\n")
     for i in range(dim + 1):
-        print(dim + 1 - i, end=f" [")
+        print(dim + 1 - i, end=" [")
         for j, elem in enumerate(reversed_lattice[i][:dim]):
             if (i, j) == knight_pos:
                 print(
@@ -84,7 +85,7 @@ def print_lattice_in_quandrant_one_for_move_selection(
 
     print("\n\n")
     for i in range(dim + 1):
-        print(dim + 1 - i, end=f" [")
+        print(dim + 1 - i, end=" [")
         for j, elem in enumerate(reversed_lattice[i][:dim]):
             if (i, j) == knight_pos:
                 print(
@@ -155,7 +156,11 @@ class GameState:
             cur_i, cur_j = self.knight_pos
             self.visited[cur_j, cur_i] -= 1
             last_wait, last_move_str, old_stuff = self.move_history.pop()
-            last_i, last_j, old_lattice = old_stuff[0][0], old_stuff[0][1], old_stuff[1]
+            last_i, last_j, old_lattice = (
+                old_stuff[0][0],
+                old_stuff[0][1],
+                old_stuff[1],
+            )
 
             self.lattice = old_lattice
             self.knight_pos = (last_i, last_j)
@@ -170,9 +175,15 @@ class GameState:
             # di, dj = dj, di
             ni, nj = i + di, j + dj
             # nj, ni = ni, nj
-            if 0 <= ni <= self.dim and 0 <= nj <= self.dim and self.visited[ni][nj] < 3:
+            if (
+                0 <= ni <= self.dim
+                and 0 <= nj <= self.dim
+                and self.visited[ni][nj] < 3
+            ):
                 x, y = lat[i, j], lat[ni, nj] + dz
-                print(convert_to_lattice_point_notation(nj, ni), x, y, di, dj, dz)
+                print(
+                    convert_to_lattice_point_notation(nj, ni), x, y, di, dj, dz
+                )
                 if abs(x - y) < 1e-5:
                     print("Good move by altitude")
                     # print(convert_to_lattice_point_notation(nj,ni))
@@ -191,7 +202,10 @@ class GameState:
         ]
         print(len(sinking_coords))
         rising_coord = (abs(self.dim - cur_i), abs(self.dim - cur_j))
-        if self.lattice[rising_coord[0], rising_coord[1]] == self.lattice[cur_i, cur_j]:
+        if (
+            self.lattice[rising_coord[0], rising_coord[1]]
+            == self.lattice[cur_i, cur_j]
+        ):
             rising_equals = True
             sinking_coords.remove(
                 rising_coord
@@ -202,7 +216,9 @@ class GameState:
         wait_times = [(self.lattice.copy(), 0)]
         timed_lattice = self.lattice.copy()
         for time_spent_waiting in range(
-            len(sinking_coords), wait * len(sinking_coords), len(sinking_coords)
+            len(sinking_coords),
+            wait * len(sinking_coords),
+            len(sinking_coords),
         ):
             for x, y in sinking_coords:
                 timed_lattice[x, y] -= 1
